@@ -140,7 +140,7 @@ def probe_civicclerk():
 
     return result
 
-def probe_weblink():
+def probe_weblink(verify_ssl=False):
     candidates = [
         "https://weblink.mecknc.gov",
         "https://records.mecknc.gov",
@@ -149,7 +149,10 @@ def probe_weblink():
     ]
     result = {"status": 404, "endpoint": None, "notes": "All candidates failed."}
 
-    with httpx.Client(timeout=TIMEOUT, follow_redirects=True, verify=False) as client:
+    if not verify_ssl:
+        print("WARNING: SSL verification is disabled for WebLink probes. This silently accepts invalid/self-signed certs.")
+
+    with httpx.Client(timeout=TIMEOUT, follow_redirects=True, verify=verify_ssl) as client:
         for url in candidates:
             print(f"Probing WebLink: {url}")
             resp = probe_url(url, method="HEAD", client=client)
