@@ -23,3 +23,10 @@ Thumbs.db
 
 # Jules artifacts
 verification*.png
+
+# Python and data files
+.venv
+__pycache__
+*.pyc
+raw/*.html
+raw/*.pdf
