@@ -1,11 +1,8 @@
 {
-  "primary_domain": "https://www.charlottenc.gov/Home",
+  "primary_domain": "https://www.mecknc.gov/",
   "primary_domain_status": 200,
-  "alt_domains": [
-    "https://www.mecknc.gov/",
-    "https://www.mecknc.gov/",
-    "https://www.mecknc.gov"
-  ],
+  "alt_domains": [],
+  "_note": "Corrected 2026-05-11: prior probe set charlottenc.gov as primary_domain. Charlotte is the CITY OF CHARLOTTE — a separate government inside Mecklenburg County. Mecklenburg County's official site is mecknc.gov. The Legistar tenant_slug=mecklenburg and Granicus instance=mecklenburg.granicus.com below are verified County-side (sample bodies include BOCC).",
   "adapters": {
     "legistar": {
       "status": 200,
