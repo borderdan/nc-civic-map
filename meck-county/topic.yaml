@@ -1,0 +1,32 @@
+id: local-gov-meck-county-nc
+name: Mecklenburg County NC
+locale:
+  type: county
+  parent_state: nc
+  jurisdiction_tag: meck-county-nc
+  population: ~1100000
+  primary_domain: https://www.mecknc.gov/
+scrape_sources:
+- source_id: legistar:mecklenburg:enumerate
+  refresh_cadence: weekly
+  enabled: true
+- source_id: sitemap:meck-county-nc:bfs
+  refresh_cadence: quarterly
+- source_id: sitemap:meck-county-nc:doc_id_walk
+  refresh_cadence: monthly
+- source_id: sitemap:meck-county-nc:classify
+  refresh_cadence: weekly
+seeds:
+- url: https://www.mecknc.gov/
+  kind: html
+  role: home
+  refresh_cadence: monthly
+locality_guard_cities:
+- mecklenburg
+- charlotte
+- davidson
+- cornelius
+- huntersville
+- matthews
+- mint hill
+- pineville

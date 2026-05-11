@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Meet Your",
+    "role": "Commissioner",
+    "term_start": "",
+    "source_url": "https://bocc.mecknc.gov/",
+    "extraction_method": "page-parse"
+  },
+  {
+    "name": "At Large",
+    "role": "Commissioner \u2014 District 6",
+    "term_start": "",
+    "source_url": "https://bocc.mecknc.gov/",
+    "extraction_method": "page-parse"
+  },
+  {
+    "name": "Mecklenburg County",
+    "role": "County Manager",
+    "source_url": "https://www.mecknc.gov/county-managers-office",
+    "extraction_method": "page-parse"
+  }
+]
