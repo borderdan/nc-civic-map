@@ -30,3 +30,5 @@ __pycache__
 *.pyc
 raw/*.html
 raw/*.pdf
+test-results/
+playwright-report/
