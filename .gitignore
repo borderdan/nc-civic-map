@@ -30,3 +30,4 @@ __pycache__
 *.pyc
 raw/*.html
 raw/*.pdf
+venv/

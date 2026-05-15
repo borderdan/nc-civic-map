@@ -178,3 +178,91 @@ def test_probe_granicus_video(mock_sleep):
 
         assert result["status"] == 200
         assert result["endpoint"] == "https://mecknc.granicus.com"
+
+@patch("probe_adapters.polite_sleep", return_value=None)
+def test_probe_boarddocs(mock_sleep):
+    with patch("httpx.Client") as mock_client:
+        mock_instance = mock_client.return_value.__enter__.return_value
+
+        def mock_head(url):
+            resp = MagicMock()
+            if url == "https://go.boarddocs.com/nc/mecknc/Board.nsf/Public":
+                resp.status_code = 200
+            else:
+                resp.status_code = 404
+            return resp
+
+        def mock_get(url):
+            resp = MagicMock()
+            resp.status_code = 404
+            return resp
+
+        mock_instance.head.side_effect = mock_head
+        mock_instance.get.side_effect = mock_get
+
+        result = probe_boarddocs()
+
+        assert result["status"] == 200
+        assert result["endpoint"] == "https://go.boarddocs.com/nc/mecknc/Board.nsf/Public"
+
+@patch("probe_adapters.polite_sleep", return_value=None)
+def test_probe_devnet(mock_sleep):
+    with patch("httpx.Client") as mock_client:
+        mock_instance = mock_client.return_value.__enter__.return_value
+
+        def mock_head(url):
+            resp = MagicMock()
+            if url == "https://mecknc.devnetwedge.com":
+                resp.status_code = 200
+            else:
+                resp.status_code = 404
+            return resp
+
+        def mock_get(url):
+            resp = MagicMock()
+            resp.status_code = 404
+            return resp
+
+        mock_instance.head.side_effect = mock_head
+        mock_instance.get.side_effect = mock_get
+
+        result = probe_devnet()
+
+        assert result["status"] == 200
+        assert result["endpoint"] == "https://mecknc.devnetwedge.com"
+
+@patch("probe_adapters.check_primary_domains")
+@patch("probe_adapters.probe_legistar")
+@patch("probe_adapters.probe_civicclerk")
+@patch("probe_adapters.probe_weblink")
+@patch("probe_adapters.probe_granicus_video")
+@patch("probe_adapters.probe_boarddocs")
+@patch("probe_adapters.probe_devnet")
+@patch("builtins.open", new_callable=MagicMock)
+@patch("os.makedirs")
+def test_probe_adapters_main(
+    mock_makedirs,
+    mock_open,
+    mock_probe_devnet,
+    mock_probe_boarddocs,
+    mock_probe_granicus_video,
+    mock_probe_weblink,
+    mock_probe_civicclerk,
+    mock_probe_legistar,
+    mock_check_primary_domains
+):
+    from probe_adapters import main
+    mock_check_primary_domains.return_value = ("https://example.com", 200, [])
+    mock_probe_legistar.return_value = {"status": 200}
+    mock_probe_civicclerk.return_value = {"status": 404}
+    mock_probe_weblink.return_value = {"status": 404}
+    mock_probe_granicus_video.return_value = {"status": 404}
+    mock_probe_boarddocs.return_value = {"status": 404}
+    mock_probe_devnet.return_value = {"status": 404}
+
+    main()
+
+    mock_check_primary_domains.assert_called_once()
+    mock_probe_legistar.assert_called_once()
+    mock_makedirs.assert_called_once_with("meck-county", exist_ok=True)
+    mock_open.assert_called_once_with("meck-county/adapter_probes.json", "w")
