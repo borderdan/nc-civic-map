@@ -106,3 +106,24 @@ async def test_sequential_id_walk():
         assert mock_client.get.call_count == 2
         # Should append 2 records
         assert mock_sink.append.call_count == 2
+
+@pytest.mark.asyncio
+async def test_crawl_locale_main():
+    with patch("builtins.open", new_callable=MagicMock) as mock_open:
+        # Mock the adapter config reading
+        import json
+        mock_open.return_value.__enter__.return_value.read.return_value = json.dumps({"primary_domain": "https://example.com"})
+
+        with patch("crawl_locale.bfs_crawl", new_callable=AsyncMock) as mock_bfs_crawl:
+            mock_bfs_crawl.return_value = {"doccenter": True, "civicalerts": False, "calendar": False}
+
+            with patch("crawl_locale.sequential_id_walk", new_callable=AsyncMock) as mock_sequential_id_walk:
+                with patch("crawl_locale.CSVSink") as mock_csv_sink_class:
+                    mock_sink_instance = MagicMock()
+                    mock_csv_sink_class.return_value = mock_sink_instance
+
+                    from crawl_locale import main
+                    await main()
+
+                    mock_bfs_crawl.assert_called_once_with("https://example.com", mock_sink_instance)
+                    mock_sequential_id_walk.assert_called_once_with("https://example.com", {"doccenter": True, "civicalerts": False, "calendar": False}, mock_sink_instance)
